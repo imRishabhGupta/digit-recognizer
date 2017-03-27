@@ -17,10 +17,7 @@ x = np.array(train)/255.
 test = pd.read_csv("test.csv")
 x_ = np.array(test)/255.
 
-clf=svm.SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-    decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
-    max_iter=-1, probability=False, random_state=None, shrinking=True,
-    tol=0.001, verbose=True)
+clf=svm.SVC(decision_function_shape='ovo')
 
 clf.fit(x,y)
 print clf.classes_
