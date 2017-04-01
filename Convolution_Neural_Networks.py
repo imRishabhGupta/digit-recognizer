@@ -122,6 +122,8 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
+predict = tf.argmax(y_conv,1)
+
 sess.run(tf.global_variables_initializer())
 
 print("starts")
@@ -133,9 +135,10 @@ for i in range(20000):
     print("step %d, training accuracy %g"%(i, train_accuracy))
   train_step.run(feed_dict={x: batch_xs, y_: batch_ys, keep_prob: 0.5})
 
+BATCH_SIZE = 50
 predicted_lables = np.zeros(test_images.shape[0])
-predicted_lables = predict.eval(feed_dict={x: test_images, keep_prob: 1.0})
-
-print('predicted_lables({0})'.format(len(predicted_lables)))
+for i in range(0,test_images.shape[0]//BATCH_SIZE):
+    predicted_lables[i*BATCH_SIZE : (i+1)*BATCH_SIZE] = predict.eval(feed_dict={x: test_images[i*BATCH_SIZE : (i+1)*BATCH_SIZE], 
+                                                                                keep_prob: 1.0})
 
 np.savetxt('submission_cnn.csv', np.c_[range(1,len(test_images)+1),predicted_lables], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')
